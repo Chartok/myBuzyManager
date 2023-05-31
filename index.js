@@ -6,7 +6,7 @@ const cTable = require('console.table');
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '!U639n415!',
+    password: '!!',
     database: 'employee_db'
 });
 
@@ -105,7 +105,15 @@ function addDepartment() {
             {
                 type: 'input',
                 name: 'department',
-                message: 'What is the name of the new department?'
+                message: 'What is the name of the new department?',
+                validate: function (value) {
+                    let pass = value.match('^[a-zA-Z ]+$');
+                    if (pass) {
+                        return true;
+                    } else {
+                        return 'Please enter a valid department name.';
+                    }
+                }
             }
         ])
         .then((answer) => {
@@ -124,17 +132,28 @@ function addRole() {
             {
                 type: 'input',
                 name: 'role',
-                message: 'What is the name of the role?'
+                message: 'What is the name of the role?',
+                validate: function (value) {
+                    let pass = value.match('/^[a-zA-Z0-9 ]*$/');
+                }
             },
             {
                 type: 'input',
                 name: 'salary',
-                message: 'What is the salary of the role?'
+                message: 'What is the salary of the role?',
+                validate: function (value) {
+                    let valid = !isNaN(parseFloat(value)) && parseFloat(value) > 0;
+                    return valid || 'Please enter a valid salary.';
+                },
             },
             {
                 type: 'input',
                 name: 'department_id',
-                message: 'What is the department ID of the role?'
+                message: 'What is the department ID of the role?',
+                validate: function (value) {
+                    let valid = !isNaN(parseFloat(value)) && parseFloat(value) > 0;
+                    return valid || 'Please enter a valid department ID.';
+                }
             }
         ])
         .then((answer) => {
@@ -152,22 +171,46 @@ function addEmployee() {
             {
                 type: 'input',
                 name: 'first_name',
-                message: 'What is the first name of the employee?'
+                message: 'What is the first name of the employee?',
+                validate: function (value) {
+                    let pass = value.match('^[a-zA-Z ]+$');
+                    if (pass) {
+                        return true;
+                    } else {
+                        return 'Please enter a valid first name.';
+                    }
+                }
             },
             {
                 type: 'input',
                 name: 'last_name',
-                message: 'What is the last name of the employee?'
+                message: 'What is the last name of the employee?',
+                validate: function (value) {
+                    let pass = value.match('^[a-zA-Z ]+$');
+                    if (pass) {
+                        return true;
+                    } else {
+                        return 'Please enter a valid last name.';
+                    }
+                }
             },
             {
                 type: 'input',
                 name: 'role',
-                message: 'What is the role ID of the employee?'
+                message: 'What is the role ID of the employee?',
+                validate: function (value) {
+                    let valid = !isNaN(parseFloat(value)) && parseFloat(value) > 0;
+                    return valid || 'Please enter a valid role ID.';
+                }
             },
             {
                 type: 'input',
                 name: 'manager',
-                message: 'What is the manager ID of the employee?'
+                message: 'What is the manager ID of the employee?',
+                validate: function (value) {
+                    let valid = !isNaN(parseFloat(value)) && parseFloat(value) > 0;
+                    return valid || 'Please enter a valid manager ID.';
+                }
             },
         ])
         .then((answer) => {
@@ -187,12 +230,20 @@ function updateEmployeeRole() {
             {
                 type: 'input',
                 name: 'employee',
-                message: 'What is the ID of the employee you would like to update?'
+                message: 'What is the ID of the employee you would like to update?',
+                validate: function (value) {
+                    let valid = !isNaN(parseFloat(value)) && parseFloat(value) > 0;
+                    return valid || 'Please enter a valid employee ID.';
+                }
             },
             {
                 type: 'input',
                 name: 'role',
-                message: 'What is the new role ID of the employee?'
+                message: 'What is the new role ID of the employee?',
+                validate: function (value) {
+                    let valid = !isNaN(parseFloat(value)) && parseFloat(value) > 0;
+                    return valid || 'Please enter a valid role ID.';
+                }
             }
         ])
         .then((answer) => {
