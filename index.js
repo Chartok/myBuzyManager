@@ -23,7 +23,7 @@ function start() {
             {
                 type: 'list',
                 name: 'action',
-                message: 'What would you like to do?',
+                message: 'Please select an option',
                 choices: [
                     'View all departments',
                     'View all roles',
