@@ -32,6 +32,12 @@ function start() {
                     'Add a role',
                     'Add an employee',
                     'Update an employee role',
+                    'View employees by manager',
+                    'View employees by department',
+                    'Delete a department',
+                    'Delete a role',
+                    'Delete an employee',
+                    'View department budget',
                     'Exit'
                 ]
             }
@@ -59,25 +65,25 @@ function start() {
                 case 'Update an employee role':
                     updateEmployeeRole();
                     break;
-                case 'Update an employee manager';
+                case 'Update an employee manager':
                     updateEmployeeManager();
                     break;
-                case 'View employees by manager';
+                case 'View employees by manager':
                     viewEmployeesByManager();
                     break;
-                case 'View employees by department';
+                case 'View employees by department':
                     viewEmployeesByDept();
                     break;
-                case 'Delete a department';
+                case 'Delete a department':
                     deleteDept();
                     break;
-                case 'Delete a role';
+                case 'Delete a role':
                     deleteRole();
                     break;
-                case 'Delete an employee';
+                case 'Delete an employee':
                     deleteEmployee();
                     break;
-                case 'View department budget';
+                case 'View department budget':
                     viewBudget();
                     break;
                 case 'Exit':
