@@ -59,6 +59,27 @@ function start() {
                 case 'Update an employee role':
                     updateEmployeeRole();
                     break;
+                case 'Update an employee manager';
+                    updateEmployeeManager();
+                    break;
+                case 'View employees by manager';
+                    viewEmployeesByManager();
+                    break;
+                case 'View employees by department';
+                    viewEmployeesByDept();
+                    break;
+                case 'Delete a department';
+                    deleteDept();
+                    break;
+                case 'Delete a role';
+                    deleteRole();
+                    break;
+                case 'Delete an employee';
+                    deleteEmployee();
+                    break;
+                case 'View department budget';
+                    viewBudget();
+                    break;
                 case 'Exit':
                     connection.end();
                     break;
