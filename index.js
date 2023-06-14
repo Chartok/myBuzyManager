@@ -1,6 +1,6 @@
-const inquirer = require('inquirer');
+const { inquirer } = require('inquirer');
 const mysql = require('mysql2');
-const cTable = require('console.table');
+
 
 // MySQL connection
 const connection = mysql.createConnection({
@@ -13,8 +13,8 @@ const connection = mysql.createConnection({
 connection.connect(err => {
     if (err) throw err;
     console.log(err);
-    start();
     console.log('Connected to CMS Employee Database.');
+    start();
 });
 
 function start() {
@@ -32,8 +32,8 @@ function start() {
                     'Add a role',
                     'Add an employee',
                     'Update an employee role',
-                    'View employees by manager',
-                    'View employees by department',
+                    'View all employees by manager',
+                    'View all employees by department',
                     'Delete a department',
                     'Delete a role',
                     'Delete an employee',
@@ -188,6 +188,7 @@ function addRole() {
                 if (err) throw err;
                 console.log('\n');
                 console.log('New role added successfully!');
+                start();
             });
         });
 }
@@ -310,7 +311,25 @@ function updateEmployeeManager() {
 
 }
 
-function viewEmployeesByManager() {
+function viewEmployeesByDepartment() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'departmentId',
+            message: 'Please enter the department ID to view employees:',
+            validate: value => positiveIntegerRegex.test(value) || 'Please enter a valid department ID...'
+        }
+    ]).then((answer) => {
+        connection.query('SELECT * FROM employee JOIN role ON employee.role_id = role.id WHERE ?', { department_id: answer.departmentId }, (err, res) => {
+            if (err) throw err;
+            console.log('\n');
+            console.table(res);
+            start();
+        });
+    });
+}
+
+function viewAllEmployeesByManager() {
     inquirer.prompt([
         {
             type: 'input',
