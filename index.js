@@ -138,14 +138,14 @@ function addDepartment() {
                     if (pass) {
                         return true;
                     } else {
-                        return 'Please enter a valid department name.';
+                        return 'Please enter a valid department name...';
                     }
                 }
             }
         ])
         .then((answer) => {
             connection.query('INSERT INTO department SET ?', { name: answer.department }, (err) => {
-                if(err) throw err;
+                if (err) throw err;
                 console.log('\n')
                 console.log('New department added successfully!');
                 start();
@@ -170,7 +170,7 @@ function addRole() {
                 message: 'What is the salary of the role?',
                 validate: function (value) {
                     let valid = !isNaN(parseFloat(value)) && parseFloat(value) > 0;
-                    return valid || 'Please enter a valid salary.';
+                    return valid || 'Please enter a valid salary...';
                 },
             },
             {
@@ -179,7 +179,7 @@ function addRole() {
                 message: 'What is the department ID of the role?',
                 validate: function (value) {
                     let valid = !isNaN(parseFloat(value)) && parseFloat(value) > 0;
-                    return valid || 'Please enter a valid department ID.';
+                    return valid || 'Please enter a valid department ID...';
                 }
             }
         ])
@@ -217,7 +217,7 @@ function addEmployee() {
                     if (pass) {
                         return true;
                     } else {
-                        return 'Please enter a valid last name.';
+                        return 'Please enter a valid last name...';
                     }
                 }
             },
@@ -227,7 +227,7 @@ function addEmployee() {
                 message: 'What is the role ID of the employee?',
                 validate: function (value) {
                     let valid = !isNaN(parseFloat(value)) && parseFloat(value) > 0;
-                    return valid || 'Please enter a valid role ID.';
+                    return valid || 'Please enter a valid role ID...';
                 }
             },
             {
@@ -236,7 +236,7 @@ function addEmployee() {
                 message: 'What is the manager ID of the employee?',
                 validate: function (value) {
                     let valid = !isNaN(parseFloat(value)) && parseFloat(value) > 0;
-                    return valid || 'Please enter a valid manager ID.';
+                    return valid || 'Please enter a valid manager ID...';
                 }
             },
         ])
@@ -260,7 +260,7 @@ function updateEmployeeRole() {
                 message: 'What is the ID of the employee you would like to update?',
                 validate: function (value) {
                     let valid = !isNaN(parseFloat(value)) && parseFloat(value) > 0;
-                    return valid || 'Please enter a valid employee ID.';
+                    return valid || 'Please enter a valid employee ID...';
                 }
             },
             {
@@ -269,7 +269,7 @@ function updateEmployeeRole() {
                 message: 'What is the new role ID of the employee?',
                 validate: function (value) {
                     let valid = !isNaN(parseFloat(value)) && parseFloat(value) > 0;
-                    return valid || 'Please enter a valid role ID.';
+                    return valid || 'Please enter a valid role ID...';
                 }
             }
         ])
@@ -282,4 +282,120 @@ function updateEmployeeRole() {
                 start();
             });
         });
+}
+
+function updateEmployeeManager() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'employeeId',
+            message: 'What is the ID of the employee you would like to update?',
+            validate: value => positiveIntegerRegex.test(value) || 'Please enter a valid employee ID...'
+        },
+        {
+            type: 'input',
+            name: 'newManagerId',
+            message: 'What is the new manager ID?',
+            validate: value => positiveIntegerRegex.test(value) || 'Please enter a valid manager ID...'
+        }
+
+    ]).then((answer) => {
+        connection.query('UPDATE employee SET ? WHERE ?', [{ manager_id: answer.newManagerId }, { id: answer.employeeId }], (err) => {
+            if (err) throw err;
+            console.log('\n');
+            console.log('Employee manager updated successfully!');
+            start();
+        });
+    });
+
+}
+
+function viewEmployeesByManager() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'managerId',
+            message: 'Please enter the manager ID to view their employees:',
+            validate: value => positiveIntegerRegex.test(value) || 'Please enter a valid manager ID...'
+        }
+    ]).then((answer) => {
+        connection.query('SELECT * FROM employee WHERE ?', { manager_id: answer.managerId }, (err, res) => {
+            if (err) throw err;
+            console.log('\n');
+            console.table(res);
+            start();
+        });
+    });
+}
+
+function deleteDept() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'departmentId',
+            message: 'Please enter the ID of the department you want to delete:',
+            validate: value => positiveIntegerRegex.test(value) || 'Please enter a valid department ID...'
+        }
+    ]).then((answer) => {
+        connection.query('DELETE FROM department WHERE ?', { id: answer.departmentId }, (err) => {
+            if (err) throw err;
+            console.log('\n');
+            console.log('Department deleted successfully!');
+            start();
+        });
+    });
+}
+
+function deleteRole() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'roleId',
+            message: 'Please enter the ID of the role you want to delete:',
+            validate: value => positiveIntegerRegex.test(value) || 'Please enter a valid role ID...'
+        }
+    ]).then((answer) => {
+        connection.query('DELETE FROM role WHERE ?', { id: answer.roleId }, (err) => {
+            if (err) throw err;
+            console.log('\n');
+            console.log('Role deleted successfully!');
+            start();
+        });
+    });
+}
+
+function deleteEmployee() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'employeeId',
+            message: 'Please enter the ID of the employee you want to delete:',
+            validate: value => positiveIntegerRegex.test(value) || 'Please enter a valid employee ID...'
+        }
+    ]).then((answer) => {
+        connection.query('DELETE FROM employee WHERE ?', { id: answer.employeeId }, (err) => {
+            if (err) throw err;
+            console.log('\n');
+            console.log('Employee deleted successfully!');
+            start();
+        });
+    });
+}
+
+function viewBudget() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'departmentId',
+            message: 'Please enter the ID of the department you want to view:',
+            validate: value => positiveIntegerRegex.test(value) || 'Please enter a valid department ID...'
+        }
+    ]).then((answer) => {
+        connection.query('SELECT SUM(salary) AS budget FROM role WHERE department_id = ?', [answer.departmentId], (err, res) => {
+            if (err) throw err;
+            console.log('\n');
+            console.table(res);
+            start();
+        });
+    });
 }
