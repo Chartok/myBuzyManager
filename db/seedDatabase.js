@@ -12,8 +12,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const seedDatabase = async () => {
     try {
         const connection = await mysql.createConnection({
+            host : process.env.DB_HOST,
             user: process.env.DB_USER,
-            password: process.env.DB_PASS,
+            password: process.env.DB_PW,
             database: process.env.DB_NAME
         });
 

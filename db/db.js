@@ -4,20 +4,21 @@ import { config } from 'dotenv';
 config();
 
 const connection = mysql.createConnection({
+    host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PW,
     database: 'employee_db',
 });
 
-export function executeQuery(query, params = []) {
+export function executeQuery(query, params) {
     return new Promise((resolve, reject) => {
         connection.query(query, params, (error, results) => {
-            if (error) {
-                reject(error);
-                return;
-            }
-            resolve(results);
-        });
+                if (error) {
+                    reject(error);
+                    return;
+                }
+                resolve(results);
+            });
     });
 }
 
