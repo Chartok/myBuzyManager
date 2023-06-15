@@ -27,7 +27,7 @@ class DB {
         return this.query("SELECT id, first_name, last_name FROM employee WHERE id != ?", employeeId);
     }
 
-    async createEmployee(employee) {
+    async addEmployee(employee) {
         return this.query("INSERT INTO employee SET ?", employee);
     }
 
@@ -47,7 +47,7 @@ class DB {
         return this.query("SELECT role.id, role.title, department. name AS department, role.salary FROM role LEFT JOIN department on role. department_id = department.id;");
     }
 
-    async createRole(role) {
+    async addRole(role) {
         return this.query("INSERT INTO role SET ?", role);
     }
 
@@ -63,7 +63,7 @@ class DB {
         return this.query("SELECT department.id, department.name, SUM(role.salary) AS budget FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id GROUP BY department.id, department.name;");
     }
 
-    async createDept(department) {
+    async addDept(department) {
         return this.query("INSERT INTO department SET ?", department);
     }
 
