@@ -11,13 +11,16 @@ import {
     removeDepartment,
     removeRole,
     removeEmployee,
-    viewBudget,
+    viewDepartmentBudget,
     viewEmployeesByDepartment,
     viewEmployeesByManager,
     viewAllPossibleManagers,
-} from "./db/db.js";
+} from "./queries.js";
+
+// Import validation functions for validating user input in add/update/delete functions
 import { validateAlpha, validatePositiveInteger } from "./validate.js";
 
+// Export start function to index.js to start the application when connection is successful
 export async function start(connection) {
     const choices = [
         "View All Departments",
@@ -38,6 +41,7 @@ export async function start(connection) {
         "Exit",
     ];
 
+    // While loop to continue prompting user for action until user chooses to exit
     while (true) {
         try {
             const { action } = await inquirer.prompt([
@@ -112,6 +116,7 @@ export async function start(connection) {
     }
 }
 
+// Functions to handle each action
 async function handleViewAllDepartments() {
     await viewAllDepartments();
 }
@@ -127,7 +132,7 @@ async function handleViewAllEmployees() {
 async function handleAddDepartment() {
     try {
 
-    const { department } = await inquirer.prompt([
+    const { department_id } = await inquirer.prompt([
         {
             type: "input",
             name: "department",
@@ -136,7 +141,7 @@ async function handleAddDepartment() {
         },
     ]);
 
-        await addDepartment(department);
+        await addDepartment(department_id);
 
     } catch (error) {
         console.log("There was an error adding the department. Please contact your System's Administrator with the error information.\n", error);
@@ -312,7 +317,7 @@ async function handleRemoveEmployee() {
 }
 
 async function handleViewBudget() {
-    await viewBudget();
+    await viewDepartmentBudget();
 }
 
 async function handleViewEmployeesByDepartment() {

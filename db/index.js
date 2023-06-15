@@ -1,4 +1,4 @@
-import db from './db.js';
+import db from '/db.js';
 class DB {
     constructor(connection) {
         this.connection = connection;
@@ -59,7 +59,7 @@ class DB {
         return this.query("SELECT department.id, department.name FROM department;");
     }
 
-    async viewBudget() {
+    async viewDepartmentBudget() {
         return this.query("SELECT department.id, department.name, SUM(role.salary) AS budget FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id GROUP BY department.id, department.name;");
     }
 
