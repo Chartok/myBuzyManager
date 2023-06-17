@@ -4,7 +4,7 @@ class DB {
         this.connection = connection;
     }
 
-    // use the promise() method to access the asynchronous connection
+    // Accessing connection asynchronously which will await the promise of the query
     async query(queryString, params) {
         try {
             const [rows] = await this.connection.promise().query(queryString, params);
