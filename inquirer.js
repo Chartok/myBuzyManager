@@ -3,16 +3,15 @@ import {
     viewAllDepartments,
     viewAllRoles,
     viewAllEmployees,
-    addDepartment,
-    addRole,
-    addEmployee,
+    createDepartment,
+    createRole,
+    createEmployee,
     updateEmployeeRole,
     updateEmployeeManager,
     removeDepartment,
     removeRole,
     removeEmployee,
     viewDepartmentBudget,
-    viewEmployeesByDepartment,
     viewEmployeesByManager,
     viewAllPossibleManagers,
 } from "./queries.js";
@@ -64,13 +63,13 @@ export async function start(connection) {
                     await handleViewAllEmployees();
                     break;
                 case "Add a Department":
-                    await handleAddDepartment();
+                    await handleCreateDepartment();
                     break;
                 case "Add a Role":
-                    await handleAddRole();
+                    await handleCreateRole();
                     break;
                 case "Add an Employee":
-                    await handleAddEmployee();
+                    await handleCreateEmployee();
                     break;
                 case "Update an Employee's Role":
                     await handleUpdateEmployeeRole();
@@ -88,7 +87,7 @@ export async function start(connection) {
                     await handleRemoveEmployee();
                     break;
                 case "View Department Budget":
-                    await handleViewBudget();
+                    await handleViewDepartmentBudget();
                     break;
                 case "View Employees by Department":
                     await handleViewEmployeesByDepartment();
@@ -129,10 +128,10 @@ async function handleViewAllEmployees() {
     await viewAllEmployees();
 }
 
-async function handleAddDepartment() {
+async function handleCreateDepartment() {
     try {
 
-    const { department_id } = await inquirer.prompt([
+    const { department } = await inquirer.prompt([
         {
             type: "input",
             name: "department",
@@ -141,16 +140,17 @@ async function handleAddDepartment() {
         },
     ]);
 
-        await addDepartment(department_id);
+        await createDepartment(department);
 
     } catch (error) {
         console.log("There was an error adding the department. Please contact your System's Administrator with the error information.\n", error);
     }
 }
 
-async function handleAddRole() {
+async function handleCreateRole() {
     try {
-    const { title, salary, department_id } = await inquirer.prompt([
+        const { title, salary, department_id } =
+        await inquirer.prompt([
         {
             type: "input",
             name: "title",
@@ -170,15 +170,16 @@ async function handleAddRole() {
             validate: validatePositiveInteger,
         },
     ]);
+    console.log(title)
 
-        await addRole(title, salary, department_id);
+        await createRole({ title, salary, department_id });
 
     } catch (error) {
-        console.log("There was an error adding the role. Please contact your System's Administrator with the error information.\n", error);
+        console.error("There was an error adding the role. Please contact your System's Administrator with the error information.\n", error);
     }
 }
 
-async function handleAddEmployee() {
+async function handleCreateEmployee() {
     try {
     const { first_name, last_name, role_id, manager_id } = await inquirer.prompt([
         {
@@ -207,10 +208,10 @@ async function handleAddEmployee() {
         },
     ]);
 
-        await addEmployee(first_name, last_name, role_id, manager_id);
+        await createEmployee(first_name, last_name, role_id, manager_id);
 
     } catch (error) {
-        console.log("There was an error adding the employee. Please contact your System's Administrator with the error information.\n", error);
+        console.log("There was an error creating the employee. Please contact your System's Administrator with the error information.\n", error);
     }
 }
 
@@ -316,18 +317,74 @@ async function handleRemoveEmployee() {
     }
 }
 
-async function handleViewBudget() {
-    await viewDepartmentBudget();
+async function handleViewDepartmentBudget() {
+    try {
+    const { department_id } = await inquirer.prompt([
+        {
+            type: "input",
+            name: "department_id",
+            message: "What is the id of the department?",
+            validate: validatePositiveInteger,
+        },
+    ]);
+
+        await viewDepartmentBudget(department_id);
+
+    } catch (error) {
+        console.log("There was an error viewing the budget. Please contact your System's Administrator with the error information.\n", error);
+    }
 }
 
 async function handleViewEmployeesByDepartment() {
-    await viewEmployeesByDepartment();
+    try {
+        const { department_id } = await inquirer.prompt([
+            {
+                type: "input",
+                name: "department_id",
+                message: "What is the id of the department?",
+                validate: validatePositiveInteger,
+            },
+        ]);
+
+        await handleViewEmployeesByDepartment(department_id);
+
+    } catch (error) {
+        console.log("There was an error viewing employees by department. Please contact your System's Administrator with the error information.\n", error);
+    }
 }
 
 async function handleViewEmployeesByManager() {
-    await viewEmployeesByManager();
+    try {
+        const { manager_id } = await inquirer.prompt([
+            {
+                type: "input",
+                name: "manager_id",
+                message: "What is the id of the manager?",
+                validate: validatePositiveInteger,
+            },
+        ]);
+
+        await viewEmployeesByManager(manager_id);
+
+    } catch (error) {
+        console.log("There was an error viewing employees by manager. Please contact your System's Administrator with the error information.\n", error);
+    }
 }
 
 async function handleViewAllPossibleManagers() {
-    await viewAllPossibleManagers();
+    try {
+        const { employee_id } = await inquirer.prompt([
+            {
+                type: "input",
+                name: "employee_id",
+                message: "What is the id of the employee?",
+                validate: validatePositiveInteger,
+            },
+        ]);
+
+        await viewAllPossibleManagers(employee_id);
+
+    } catch (error) {
+        console.log("There was an error viewing all possible managers. Please contact your System's Administrator with the error information.\n", error);
+    }
 }

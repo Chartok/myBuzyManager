@@ -47,10 +47,10 @@ export async function viewAllEmployees() {
     }
 }
 
-export async function addDepartment(department) {
-    const query = 'INSERT INTO department SET ?';
+export async function createDepartment(departmentName) {
+    const query = 'INSERT INTO department (name)VALUES (?)';
     try {
-        const results = await executeQuery(query, department);
+        const results = await executeQuery(query, departmentName);
         console.log('\n');
         console.log('Added department successfully');
         return results;
@@ -62,10 +62,11 @@ export async function addDepartment(department) {
     }
 }
 
-export async function addRole(role) {
-    const query = 'INSERT INTO role SET ?';
+export async function createRole(role) {
+    const query = 'INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)';
     try {
-        const results = await executeQuery(query, role);
+        const { title, salary, department_id } = role;
+        const results = await executeQuery(query, [title, salary, department_id]);
         console.log('\n');
         console.log('Added role successfully');
         return results;
@@ -77,10 +78,11 @@ export async function addRole(role) {
     }
 }
 
-export async function addEmployee(employee) {
-    const query = 'INSERT INTO employee SET ?';
+export async function createEmployee(employee) {
+    const query = 'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)';
     try {
-        const results = await executeQuery(query, employee);
+        const { first_name, last_name, role_id, manager_id } = employee;
+        const results = await executeQuery(query, [first_name, last_name, role_id, manager_id]);
         console.log('\n');
         console.log('Added employee successfully');
         return results;

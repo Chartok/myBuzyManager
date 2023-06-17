@@ -7,7 +7,16 @@ class DB {
     // use the promise() method to access the asynchronous connection
     async query(queryString, params) {
         try {
-            const [rows] = await this.connection.promise().query(queryString, params);
+            let queryParams;
+            if (Array.isArray(params)) {
+                queryParams = params;
+            } else if (typeof params === "object" && params !== null) {
+                queryParams = [params];
+            } else {
+                queryParams = [params];
+            }
+
+            const [rows] = await this.connection.promise().query(queryString, queryParams);
             return rows;
         } catch (error) {
             console.error(`ERROR - ${queryString} : ${error.sqlMessage}`);
@@ -27,8 +36,8 @@ class DB {
         return this.query("SELECT id, first_name, last_name FROM employee WHERE id != ?", employeeId);
     }
 
-    async createEmployee(employee) {
-        return this.query("INSERT INTO employee SET ?", employee);
+    async createEmployee(first_name, last_name, role_id, manager_id) {
+        return this.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [first_name, last_name, role_id, manager_id]);
     }
 
     async removeEmployee(employeeId) {
@@ -48,7 +57,7 @@ class DB {
     }
 
     async createRole(role) {
-        return this.query("INSERT INTO role SET ?", role);
+        return this.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [role.title, role.salary, role.department_id]);
     }
 
     async removeRole(roleId) {
@@ -63,8 +72,8 @@ class DB {
         return this.query("SELECT department.id, department.name, SUM(role.salary) AS budget FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id GROUP BY department.id, department.name;");
     }
 
-    async createDept(department) {
-        return this.query("INSERT INTO department SET ?", department);
+    async createDepartment(department) {
+        return this.query("INSERT INTO department (name) VALUES (?)", department);
     }
 
     async removeDept(departmentId) {
