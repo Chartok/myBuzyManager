@@ -69,7 +69,7 @@ class DB {
     }
 
     async viewDepartmentBudget() {
-        return this.query("SELECT department.id, department.name, SUM(role.salary) AS budget FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id GROUP BY department.id, department.name;");
+        return this.query("SELECT department.id, department.name, SUM(role.salary) AS budget FROM role LEFT JOIN department ON role.department_id = department.id GROUP BY department.id, department.name;");
     }
 
     async createDepartment(department) {

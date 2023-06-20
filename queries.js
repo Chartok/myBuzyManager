@@ -10,10 +10,9 @@ export async function viewAllDepartments() {
         console.table(results);
         return results;
     } catch (error) {
-        console.error('There was an error retrieving all of the departments:', error);
+        console.error('There was an error retrieving all of the departments:');
         console.log('\n');
-        console.log('Please contact your System Administrator with the error information.');
-        throw error;
+        console.log('Please contact your System Administrator with the error information.', error);
     }
 }
 
@@ -25,10 +24,9 @@ export async function viewAllRoles() {
         console.table(results);
         return results;
     } catch (error) {
-        console.error('There was an error retrieving all of the roles:', error);
+        console.error('There was an error retrieving all of the roles:');
         console.log('\n');
-        console.log('Please contact your System Administrator with the error information.');
-        throw error;
+        console.log('Please contact your System Administrator with the error information.', error);
     }
 }
 
@@ -40,10 +38,9 @@ export async function viewAllEmployees() {
         console.table(results);
         return results;
     } catch (error) {
-        console.error('There was an error retrieving all of the employees:', error);
+        console.error('There was an error retrieving all of the employees:');
         console.log('\n');
-        console.log('Please contact your System Administrator with the error information.');
-        throw error;
+        console.log('Please contact your System Administrator with the error information.', error);
     }
 }
 
@@ -55,10 +52,9 @@ export async function createDepartment(departmentName) {
         console.log('Added department successfully');
         return results;
     } catch (error) {
-        console.error('There was an error adding the department:', error);
+        console.error('There was an error adding the department:');
         console.log('\n');
-        console.log('Please contact your System Administrator with the error information.');
-        throw error;
+        console.log('Please contact your System Administrator with the error information.', error);
     }
 }
 
@@ -71,10 +67,9 @@ export async function createRole(role) {
         console.log('Added role successfully');
         return results;
     } catch (error) {
-        console.error('There was an error adding the role:', error);
+        console.error('There was an error adding the role:');
         console.log('\n');
-        console.log('Please contact your System Administrator with the error information.');
-        throw error;
+        console.log('Please contact your System Administrator with the error information.', error);
     }
 }
 
@@ -87,10 +82,9 @@ export async function createEmployee(employee) {
         console.log('Added employee successfully');
         return results;
     } catch (error) {
-        console.error('There was an error adding the employee:', error);
+        console.error('There was an error adding the employee:');
         console.log('\n');
-        console.log('Please contact your System Administrator with the error information.');
-        throw error;
+        console.log('Please contact your System Administrator with the error information.', error);
     }
 }
 
@@ -102,10 +96,9 @@ export async function updateEmployeeRole(employeeId, roleId) {
         console.log('Updated employee role successfully');
         return results;
     } catch (error) {
-        console.error('There was an error updating the employee role:', error);
+        console.error('There was an error updating the employee role:');
         console.log('\n');
-        console.log('Please contact your System Administrator with the error information.');
-        throw error;
+        console.log('Please contact your System Administrator with the error information.', error);
     }
 }
 
@@ -117,10 +110,9 @@ export async function updateEmployeeManager(employeeId, managerId) {
         console.log('Updated employee manager successfully');
         return results;
     } catch (error) {
-        console.error('There was an error updating the employee manager:', error);
+        console.error('There was an error updating the employee manager:');
         console.log('\n');
-        console.log('Please contact your System Administrator with the error information.');
-        throw error;
+        console.log('Please contact your System Administrator with the error information.', error);
     }
 }
 
@@ -132,25 +124,29 @@ export async function removeDepartment(departmentId) {
         console.log('Removed department successfully');
         return results;
     } catch (error) {
-        console.error('There was an error removing department:', error);
+        console.error('There was an error removing department:');
         console.log('\n');
-        console.log('Please contact your System Administrator with the error information.');
-        throw error;
+        console.log('Please contact your System Administrator with the error information.', error);
     }
 }
 
 export async function removeRole(roleId) {
     const query = 'DELETE FROM role WHERE id = ?';
     try {
+        // Check if role has any employees assigned to it
+        const employees = await getEmployeesByRole(roleId);
+        if (employees.length > 0) {
+            throw new Error('Cannot remove role with assigned employees. \n Please remove all employees with this role before removing the role.');
+        }
+
         const results = await executeQuery(query, roleId);
         console.log('\n');
         console.log('Removed role successfully');
         return results;
     } catch (error) {
-        console.error('There was an error removing the role:', error);
+        console.error('There was an error removing the role:',);
         console.log('\n');
-        console.log('Please contact your System Administrator with the error information.');
-        throw error;
+        console.log('Please contact your System Administrator with the error information.', error);
     }
 }
 
@@ -162,25 +158,21 @@ export async function removeEmployee(employeeId) {
         console.log('Removed employee successfully');
         return results;
     } catch (error) {
-        console.error('There was an error removing the employee:', error);
+        console.error('There was an error removing the employee:');
         console.log('\n');
-        console.log('Please contact your System Administrator with the error information.');
-        throw error;
+        console.log('Please contact your System Administrator with the error', error);
     }
 }
 
-export async function viewEmployeesByDepartment(departmentId) {
+export async function findAllEmployeesByDept(departmentId) {
     const query = 'SELECT * FROM employee WHERE department_id = ?';
     try {
-        const results = await executeQuery(query, departmentId);
+        const results = await executeQuery(query, [departmentId]);
         console.log('\n');
         console.table(results);
         return results;
     } catch (error) {
         console.error('There was an error retrieving employees by department:', error);
-        console.log('\n');
-        console.log('Please contact your System Administrator with the error information.');
-        throw error;
     }
 }
 
@@ -192,10 +184,9 @@ export async function viewEmployeesByManager(managerId) {
         console.table(results);
         return results;
     } catch (error) {
-        console.error('There was an error getting the manager ID:', error);
+        console.error('There was an error getting the manager ID:');
         console.log('\n');
-        console.log('Please contact your System Administrator with the error information.');
-        throw error;
+        console.log('Please contact your System Administrator with the error information.', error);
     }
 }
 
@@ -215,7 +206,14 @@ export async function viewAllPossibleManagers(employeeId) {
 }
 
 export async function viewDepartmentBudget(departmentId) {
-    const query = 'SELECT SUM(salary) AS budget FROM employee WHERE department_id = ?';
+    const query = `
+    SELECT department.id, department.name, SUM(role.salary) AS budget
+    FROM employee
+    JOIN role ON employee.role_id = role.id
+    JOIN department ON role.department_id = department.id
+    WHERE department.id = ?
+    GROUP BY department.id, department.name;
+    `;
     try {
         const results = await executeQuery(query, departmentId);
         console.log('\n');

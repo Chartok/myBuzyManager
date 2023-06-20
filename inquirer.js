@@ -181,7 +181,7 @@ async function handleCreateRole() {
 
 async function handleCreateEmployee() {
     try {
-    const { first_name, last_name, role_id, manager_id } = await inquirer.prompt([
+    const employee = await inquirer.prompt([
         {
             type: "input",
             name: "first_name",
@@ -208,7 +208,7 @@ async function handleCreateEmployee() {
         },
     ]);
 
-        await createEmployee(first_name, last_name, role_id, manager_id);
+        await createEmployee(employee);
 
     } catch (error) {
         console.log("There was an error creating the employee. Please contact your System's Administrator with the error information.\n", error);
